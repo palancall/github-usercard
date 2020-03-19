@@ -13,7 +13,7 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
-const followersArray = [];
+
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
           , manually find some other users' github handles, or use the list found 
@@ -90,6 +90,7 @@ const cardCreator = obj => {
   location.innerHTML = `Location: ${obj.location}`;
   profileHref.href = obj.html_url;
   profileHref.innerHTML = `Profile: ${obj.html_url}`;
+
   followers.innerHTML = `Followers: ${obj.followers}`;
   following.innerHTML = `Following: ${obj.following}`;
   bio.innerHTML = `Bio: ${obj.bio}`;
@@ -99,10 +100,10 @@ const cardCreator = obj => {
 
 let entryPoint = document.querySelector(".cards");
 
+// adding my card to the DOM
 axios
   .get("https://api.github.com/users/palancall")
   .then(response => {
-    console.log(response.data);
     let state = response.data;
     entryPoint.appendChild(cardCreator(state));
   })
@@ -115,10 +116,31 @@ axios
   .get("https://api.github.com/users/palancall/followers")
   .then(followers => {
     followers.data.forEach(follower => {
-      console.log(follower);
       entryPoint.appendChild(cardCreator(follower));
     });
   })
   .catch(err => {
     console.log("something happened! ", err);
   });
+
+// STRECH
+
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
+
+followersArray.forEach(follower => {
+  axios
+    .get(`https://api.github.com/users/${follower}`)
+    .then(response => {
+      let state = response.data;
+      entryPoint.appendChild(cardCreator(state));
+    })
+    .catch(err => {
+      console.log("something happened! ", err);
+    });
+});
